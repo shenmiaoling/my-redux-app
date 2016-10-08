@@ -9,10 +9,13 @@
   },
   "dependencies": {
     "classnames": "^2.2.5",
+    "plyr": "^2.0.7",
     "react": "^15.3.2",
     "react-dom": "^15.3.2",
     "react-router": "^2.8.1",
-    "react-router-redux": "^4.0.6"
+    "react-router-redux": "^4.0.6",
+    "redux-logger": "^2.7.0",
+    "redux-thunk": "^2.1.0"
   },
   "scripts": {
     "start": "PORT=3002 react-scripts start",

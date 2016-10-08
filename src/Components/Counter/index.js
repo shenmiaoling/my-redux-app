@@ -5,9 +5,7 @@ import {Link} from 'react-router'
 import img from '../../../images/1.png'
 require('./styles.css')
 let Counter = React.createClass({
-  componentDidMount(){
-    console.log("hello")
-  },
+
   render(){
     const { value, onIncreaseClick, onDecreaseClick } = this.props
     return <div>
@@ -22,13 +20,13 @@ let Counter = React.createClass({
           <img src={img} alt="bird"/>
         </section>
       </div>
+    }
+  })
+  function mapStateToProps(state) {
+    return {
+      value: state.count
+    }
   }
-})
-function mapStateToProps(state) {
-  return {
-    value: state.count
-  }
-}
 
 // Map Redux actions to component props
 function mapDispatchToProps(dispatch) {

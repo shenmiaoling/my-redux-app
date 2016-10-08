@@ -1,35 +1,37 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { createStore, combineReducers } from 'redux'
+import { combineReducers, createStore} from 'redux'
 import { Provider } from 'react-redux'
 import Counter from './Components/Counter'
-import reducer from './Reducer'
-import routes from '../routes'
+import counter from './Reducer'
+// import routes from './routes'
+// import createLogger from 'redux-logger';
 import { Router, Route, browserHistory } from 'react-router'
 import { syncHistoryWithStore, routerReducer } from 'react-router-redux'
+// import thunk from 'redux-thunk'
 import NotFound from './Components/404.js'
-import Hello from './Components'
-
-// Store
+import Hello from './Components/Header'
 const store = createStore(
-  combineReducers(Object.assign(reducer, {
-  routing: routerReducer
+  combineReducers({
+    count: counter,
+    routing: routerReducer
   })
-  )
 )
+const history = syncHistoryWithStore(browserHistory, store)
+ReactDOM.render(
+  <Provider store={store}>
+    <Router history={history}>
+      <Route path="/" component={Counter}/>
+      <Route path="hello" component={Hello}/>
+      <Route path="*" component={NotFound}/>
+    </Router>
+  </Provider>,
+  document.getElementById('root'))
 // const history = syncHistoryWithStore(browserHistory, store)
-// ReactDOM.render(
+// const render = () => ReactDOM.render(
 //   <Provider store={store}>
-//     <Router history={history}>
-//       <Route path="/" component={Counter}></Route>
-//       <Route path="hello" component={Hello}/>
-//       <Route path="*" component={NotFound}/>
-//     </Router>
+//     <Router history={history} routes={routes}/>
 //   </Provider>,
 //   document.getElementById('root')
-  ReactDOM.render(((history) => {
-  return <Provider store={store}>
-    <Router routes={routes} history={history} />
-  </Provider>
-})(syncHistoryWithStore(browserHistory, store)), document.getElementById('root'))
+// )
 
