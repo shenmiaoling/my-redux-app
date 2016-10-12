@@ -5,7 +5,8 @@ componentDidMount(){
     this.draw21(),
     this.picture(),
     this.drawSmile(),
-    this.bezier()
+    this.bezier(),
+    this.path2d()
   },
 
 draw21(id) {
@@ -155,9 +156,83 @@ if(canvas.getContext){
   alert("不支持html5");
 }
 },
+path2d(){
+  var canvas = this.refs.path2d
+  if (canvas.getContext) {
+    var ctx = canvas.getContext('2d')
+  //   var rectangle = new Path2D();
+  //   rectangle.rect(10, 10, 50, 50);
+
+  //   var circle = new Path2D();
+  //   circle.moveTo(125, 35);
+  //   circle.arc(100, 35, 25, 0, 2 * Math.PI);
+
+  //   ctx.stroke(rectangle);
+  //   ctx.fill(circle);
+  // ctx.fillStyle = 'rgb(255,221,0)';
+  // ctx.fillRect(0,0,150,37.5);
+  // ctx.fillStyle = 'rgb(102,204,0)';
+  // ctx.fillRect(0,37.5,150,37.5);
+  // ctx.fillStyle = 'rgb(0,153,255)';
+  // ctx.fillRect(0,75,150,37.5);
+  // ctx.fillStyle = 'rgb(255,51,0)';
+  // ctx.fillRect(0,112.5,150,37.5);
+  // for (var i=0;i<10;i++){
+  //   ctx.fillStyle = 'rgba(255,255,255,'+(i+1)/10+')';
+  //   for (var j=0;j<4;j++){
+  //     ctx.fillRect(5+i*14,5+j*37.5,14,27.5)
+  //   }
+  // }
+var offset = 0;
+
+function draw() {
+  ctx.clearRect(0,0, canvas.width, canvas.height);
+  ctx.setLineDash([8, 8]);
+  ctx.lineDashOffset = -offset;
+  ctx.strokeRect(10,10, 100, 100);
+}
+
+function march() {
+  offset++;
+  if (offset > 36) {
+    offset = 0;
+  }
+  draw();
+  setTimeout(march, 200);
+}
+// march()
+
+  var lingrad = ctx.createLinearGradient(0,0,0,150);
+  lingrad.addColorStop(0, '#00ABEB');
+  lingrad.addColorStop(0.5, '#fff');
+
+
+  var lingrad2 = ctx.createLinearGradient(0,50,0,95);
+  lingrad2.addColorStop(0.5, '#000');
+  lingrad2.addColorStop(1, 'rgba(0,0,0,0)');
+
+  // assign gradients to fill and stroke styles
+  ctx.fillStyle = lingrad;
+  ctx.strokeStyle = lingrad2;
+
+  // draw shapes
+  ctx.fillRect(10,10,130,130);
+  ctx.addColorStop(0.5, '#26C000');
+  ctx.addColorStop(1, 'pink');
+  ctx.moveTo(10,140)
+  ctx.quadraticCurveTo(75,10,140,140)
+  ctx.stroke()
+
+  ctx.stroke()
+  ctx.strokeRect(50,50,50,50);
+  }else{
+    alert("不支持html5");
+  }
+},
   render() {
     return <div className="pages-404">
     <canvas ref="canvas" width="400" height="300">我是canvas标签</canvas>
+}
 }
 <p>haha</p>
 <video width="320" height="240" controls>
@@ -189,6 +264,9 @@ if(canvas.getContext){
         <canvas ref='smile' width='200' height='300'style={{border:"1px solid"}}></canvas>
         <div>
           <canvas ref="bezier" width='150' height='150'style={{border:"1px solid"}}></canvas>
+        </div>
+        <div>
+          <canvas ref="path2d" width='650' height='250' style={{border:"1px solid"}}></canvas>
         </div>
     </div>
   }
