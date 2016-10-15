@@ -6,7 +6,9 @@ componentDidMount(){
     this.picture(),
     this.drawSmile(),
     this.bezier(),
-    this.path2d()
+    this.path2d(),
+    this.radgrad(),
+    this.image()
   },
 
 draw21(id) {
@@ -200,39 +202,92 @@ function march() {
   draw();
   setTimeout(march, 200);
 }
-// march()
-
-  var lingrad = ctx.createLinearGradient(0,0,0,150);
-  lingrad.addColorStop(0, '#00ABEB');
-  lingrad.addColorStop(0.5, '#fff');
-
-
-  var lingrad2 = ctx.createLinearGradient(0,50,0,95);
-  lingrad2.addColorStop(0.5, '#000');
-  lingrad2.addColorStop(1, 'rgba(0,0,0,0)');
-
-  // assign gradients to fill and stroke styles
-  ctx.fillStyle = lingrad;
-  ctx.strokeStyle = lingrad2;
-
-  // draw shapes
-  ctx.fillRect(10,10,130,130);
-  ctx.addColorStop(0.5, '#26C000');
-  ctx.addColorStop(1, 'pink');
-  ctx.moveTo(10,140)
-  ctx.quadraticCurveTo(75,10,140,140)
-  ctx.stroke()
-
-  ctx.stroke()
-  ctx.strokeRect(50,50,50,50);
+march()
   }else{
     alert("不支持html5");
+  }
+},
+radgrad(){
+  var canvas = this.refs.radgrad
+  if (canvas.getContext) {
+    var ctx = canvas.getContext('2d')
+  // // 创建渐变
+  // var radgrad = ctx.createRadialGradient(45,45,10,52,50,30);
+  // radgrad.addColorStop(0, '#A7D30C');
+  // radgrad.addColorStop(0.9, '#019F62');
+  // radgrad.addColorStop(1, 'rgba(1,159,98,0)');
+
+  // var radgrad2 = ctx.createRadialGradient(105,105,20,112,120,50);
+  // radgrad2.addColorStop(0, '#FF5F98');
+  // radgrad2.addColorStop(0.75, '#FF0188');
+  // radgrad2.addColorStop(1, 'rgba(255,1,136,0)');
+
+  // var radgrad3 = ctx.createRadialGradient(95,15,15,102,20,40);
+  // radgrad3.addColorStop(0, '#00C9FF');
+  // radgrad3.addColorStop(0.8, '#00B5E2');
+  // radgrad3.addColorStop(1, 'rgba(0,201,255,0)');
+
+  // var radgrad4 = ctx.createRadialGradient(0,150,50,0,140,90);
+  // radgrad4.addColorStop(0, '#F4F201');
+  // radgrad4.addColorStop(0.8, '#E4C700');
+  // radgrad4.addColorStop(1, 'rgba(228,199,0,0)');
+
+  // // 画图形
+  // ctx.fillStyle = radgrad4;
+  // ctx.fillRect(0,0,150,150);
+  // ctx.fillStyle = radgrad3;
+  // ctx.fillRect(0,0,150,150);
+  // ctx.fillStyle = radgrad2;
+  // ctx.fillRect(0,0,150,150);
+  // ctx.fillStyle = radgrad;
+  // ctx.fillRect(0,0,150,150);
+  //创建新 image 对象，用作图案
+  var img = new Image();
+  img.src = require('../../images/1.png');
+  img.onload = function(){
+
+    // 创建图案
+    var ptrn = ctx.createPattern(img,'repeat-x');
+    ctx.fillStyle = ptrn;
+    ctx.fillRect(0,0,50,50);
+  ctx.shadowOffsetX = 2;
+  ctx.shadowOffsetY = 2;
+  ctx.shadowBlur = 2;
+  ctx.shadowColor = "rgba(0, 0, 0, 0.5)";
+}
+ctx.font = "48px serif";
+ctx.textAlign = 'left'
+ctx.strokeText("Hello world", 0, 100);
+
+  }else{
+    alert("不支持html5");
+  }
+},
+image(){
+  var canvas = this.refs.image
+  if(canvas.getContext){
+    var ctx = canvas.getContext('2d')
+  ctx.translate(75,75);
+
+  for (var i=1;i<6;i++){ // Loop through rings (from inside to out)
+    ctx.save();
+    ctx.fillStyle = 'rgb('+(51*i)+','+(255-51*i)+',255)';
+
+    for (var j=0;j<i*6;j++){ // draw individual dots
+      ctx.rotate(Math.PI*2/(i*6));
+      ctx.beginPath();
+      ctx.arc(0,i*12.5,5,0,Math.PI*2,true);
+      ctx.fill();
+    }
+
+    ctx.restore();}
+  }else{
+    alert('不支持html5')
   }
 },
   render() {
     return <div className="pages-404">
     <canvas ref="canvas" width="400" height="300">我是canvas标签</canvas>
-}
 }
 <p>haha</p>
 <video width="320" height="240" controls>
@@ -266,7 +321,13 @@ function march() {
           <canvas ref="bezier" width='150' height='150'style={{border:"1px solid"}}></canvas>
         </div>
         <div>
-          <canvas ref="path2d" width='650' height='250' style={{border:"1px solid"}}></canvas>
+          <canvas ref="path2d" style={{border:"1px solid"}}></canvas>
+        </div>
+        <div>
+          <canvas ref="radgrad" style={{border:"1px solid"}}></canvas>
+        </div>
+        <div>
+          <canvas ref="image" style={{border:"1px solid"}}></canvas>
         </div>
     </div>
   }
