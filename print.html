@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>setup</title>
+  <meta charset="utf-8">
+</head>
+<body style="background-color: black">
+  <div id="main">
+    <canvas id="canvas" width="800" height="600"></canvas>
+  </div>
+</body>
+<script>
+  var ctx = canvas.getContext('2d');
+
+var str = ['abcdefg','hijklmn','opqrst','uvwxyz'];
+var count = 0;
+var so = 0;
+var text = '';
+
+var x = setInterval(function(){
+  //ctx.globalCompositeOperation = "source-over";
+ // ctx.shadowBlur = 0;
+  ctx.fillStyle = 'rgba(255,255,255,1)';
+  ctx.fillRect(0,0,400,400);
+ // ctx.shadowColor = "rgba(0,255,0,0.5)";
+ // ctx.shadowBlur = 10;
+  ctx.fillStyle = 'green';
+  ctx.font = '16px YaHei';
+ // ctx.globalCompositeOperation = "lighter";
+  for(var i = 1;i<=str.length;i++){
+    if(count>i-1){
+      ctx.fillText(str[i-1].replace(/\s+/g,""),16,50*i);
+    }
+  }
+  var s =str[count].replace(/\s+/g,"");
+  ctx.fillText(s.substr(0,so),16,50*(count+1));
+
+  ctx.fillRect(30 + ctx.measureText(s.substr(0,so)).width, 50*(count+1)-16 , 10 ,14);
+  so++;
+
+  if(so>s.length){
+    count++;
+    so=0;
+  }
+  if(count>str.length-1){
+    clearInterval(x);
+  }
+},25);
+</script>
+</html>

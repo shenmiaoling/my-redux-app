@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>setup</title>
+  <meta charset="utf-8">
+</head>
+<body onload="init()">
+  <div id="main">
+    <canvas id="canvas" width="800" height="600" style="border:1px solid"></canvas>
+  </div>
+</body>
+    <script type='text/javascript'>
+    var convas
+    var ctx;
+    var lastPt= new Object()
+    var colours = ['red', 'green', 'blue', 'yellow', 'black']
+    function init(){
+      var touchzone = document.getElementById('canvas')
+      touchzone.addEventListener('touchmove', draw, false)
+      touchzone.addEventListener('touchend', end, false)
+      ctx = touchzone.getContext('2d')
+    }
+    function draw(e) {
+      e.preventDefault()
+      for(var i=0; i<e.touches.length;i++) {
+        ctx.lineWidth = 14
+        var id = e.touches[i].identifier
+        if(lastPt[id]) {
+          ctx.beginPath()
+          ctx.moveTo(lastPt[id].x, lastPt[id].y)
+          ctx.lineTo(e.touches[i].pageX, e.touches[i].pageY)
+          ctx.strokeStyle = colours[id]
+          ctx.stroke()
+        }
+        lastPt[id] = {x: e.touches[i].pageX, y:e.touches[i].pageY}
+      }
+    }
+    function end(e) {
+      e.preventDefault()
+      for(var i=0;i<e.changedTouches.length;i++) {
+        var id = e.changedTouches[i].identifier
+        delete lastPt[id]
+      }
+    }
+    </script>
+</html>
