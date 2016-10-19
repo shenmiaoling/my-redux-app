@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>setup</title>
+  <meta charset="utf-8">
+</head>
+<body>
+  <div id="main">
+    <canvas id="canvas" width="600" height="300" style="border: 1px solid "></canvas>
+  </div>
+</body>
+<script>
+	var canvas = document.getElementById('canvas')
+	var ctx = canvas.getContext('2d')
+	line1 = {x:175,y:75}
+	function menu() {
+
+		ctx.lineWidth=5
+		ctx.lineCap='round'
+		ctx.beginPath()
+		ctx.moveTo(150, 75)
+		ctx.lineTo(line1.x,line1.y)
+		ctx.moveTo(150,85)
+		ctx.lineTo(175,85)
+		ctx.moveTo(150,95)
+		ctx.lineTo(175,95)
+		ctx.stroke()
+		window.requestAnimationFrame(menu)
+	}
+	function click(){
+		ctx.clearRect(140,80,45,10)
+		// line1={x:175,y:95}
+		window.requestAnimationFrame(click)
+	}
+	function line (){
+
+	}
+menu()
+
+	canvas.addEventListener('click',function(){
+		click()
+		line1={x:175,y:95}
+	})
+window.requestAnimationFrame(menu)
+</script>
+</html>
