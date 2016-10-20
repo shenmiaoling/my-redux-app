@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>setup</title>
+  <meta charset="utf-8">
+</head>
+<body>
+  <div id="main">
+    <canvas id="canvas" width="600" height="300" style="border: 1px solid "></canvas>
+  </div>
+</body>
+<script>
+  var canvas = document.getElementById('canvas')
+  var ctx = canvas.getContext('2d')
+  var open = false
+  var ang = 0
+  var rotate = true
+  function menu() {
+    ctx.lineWidth=5
+    ctx.lineCap='round'
+    ctx.strokeStyle = "#264350"
+    ctx.beginPath()
+    ctx.moveTo(150,75)
+    ctx.lineTo(175,75)
+    ctx.moveTo(150,85)
+    ctx.lineTo(175,85)
+    ctx.moveTo(150,95)
+    ctx.lineTo(175,95)
+    ctx.stroke()
+    window.requestAnimationFrame(menu)
+  }
+  function click(){
+    if(open){
+      var cache = this
+      var angle = 0
+      ctx.globalCompositeOperation = "destination-atop"
+      ctx.save()
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.translate(162.5, 85)
+      ctx.rotate(angle)
+      ctx.translate(-162.5, -85)
+      ctx.lineWidth=5
+      ctx.lineCap='round'
+      ctx.beginPath()
+      ctx.moveTo(150, 75)
+      ctx.lineTo(175,95)
+      ctx.moveTo(150,95)
+      ctx.lineTo(175,75)
+      ctx.stroke()
+
+      ctx.restore()
+      window.requestAnimationFrame(click)
+    }
+  }
+
+menu()
+  canvas.addEventListener('click',function(){
+    ctx.clearRect(140,80,45,10)
+    open = !open
+    click()
+
+  })
+    var go1 = 30
+    var go2 = 10
+  function draw (){
+    ctx.save()
+    ctx.moveTo(10,10)
+    ctx.lineTo(go1,10)
+    ctx.stroke()
+    ctx.restore()
+window.requestAnimationFrame(draw)
+  }
+window.requestAnimationFrame(menu)
+window.requestAnimationFrame(draw)
+document.addEventListener('click', function(){
+  for(var i = 0;i<10;i++){
+    go1--
+    console.log(go1)
+  }
+})
+</script>
+</html>
