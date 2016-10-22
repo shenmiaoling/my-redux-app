@@ -6,45 +6,43 @@
 </head>
 <body>
   <div id="main">
-    <canvas id="canvas" width="600" height="600" style="border: 1px solid " onmousewheel="window.alert('wheel!')" ></canvas>
+    <canvas id="canvas" width="600" height="600" style="border: 1px solid "></canvas>
   </div>
+<label for="wheelDelta">滚动值:</label>(IE/Opera)<input type="text" id="wheelDelta"/>
+<label for="detail">滚动值:(Firefox)</label><input type="text" id="detail"/>
 </body>
 <script type="text/javascript">
-var canvas = document.getElementById("canvas");
-var context = canvas.getContext("2d");
-var scale = 1;
-var originx = 0;
-var originy = 0;
+  var canvas = document.getElementById('canvas')
+  var ctx = canvas.getContext('2d')
+function draw() {
 
-function draw(){
-    context.fillStyle = "white";
-    context.fillRect(originx,originy,800/scale,600/scale);
-    context.fillStyle = "black";
-    context.fillRect(50,50,100,100);
+  ctx.fillRect(0,0,150,150)
 }
-setInterval(draw,100);
-
-canvas.onmousewheel = function (event){
-    var mousex = event.clientX - canvas.offsetLeft;
-    var mousey = event.clientY - canvas.offsetTop;
-    var wheel = event.wheelDelta/120;//n or -n
-
-    var zoom = 1 + wheel/2;
-
-    context.translate(
-        originx,
-        originy
-    );
-    context.scale(zoom,zoom);
-    context.translate(
-        -( mousex / scale + originx - mousex / ( scale * zoom ) ),
-        -( mousey / scale + originy - mousey / ( scale * zoom ) )
-    );
-
-    originx = ( mousex / scale + originx - mousex / ( scale * zoom ) );
-    originy = ( mousey / scale + originy - mousey / ( scale * zoom ) );
-    scale *= zoom;
+function drawArc() {
+  ctx.arc(100,200,50,0,2*Math.PI)
+  ctx.stroke()
 }
+var scrollFunc=function(e){
+    e=e || window.event;
+    var t1=document.getElementById("wheelDelta");
+    var t2=document.getElementById("detail");
+    if(e.wheelDelta){//IE/Opera/Chrome
+        t1.value=e.wheelDelta;
+        if (e.wheelDelta>0) {
+          draw()
+        }else {
+          drawArc()
+        }
 
+    }else if(e.detail){//Firefox
+        t2.value=e.detail;
+        console.log(t2.value)
+    }
+}
+/*注册事件*/
+if(document.addEventListener){
+    document.addEventListener('DOMMouseScroll',scrollFunc,false);
+}//W3C
+window.onmousewheel=document.onmousewheel=scrollFunc;//IE/Opera/Chrome
 </script>
 </html>
