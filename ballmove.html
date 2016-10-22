@@ -4,47 +4,64 @@
   <title>setup</title>
   <meta charset="utf-8">
 </head>
-<body>
+<body onload="onload()">
   <div id="main">
-    <canvas id="canvas" width="600" height="300" style="border: 1px solid "></canvas>
+
+      <canvas id="canvas" width="500" height="300" style="border: 1px solid "></canvas>
+    <select>
+        <option>arc</option>
+        <option>rect</option>
+    </select>
   </div>
 </body>
 <script type="text/javascript">
-var canvas = document.getElementById("canvas");
-var context = canvas.getContext("2d");
-var scale = 1;
-var originx = 0;
-var originy = 0;
-
-function draw(){
-    context.fillStyle = "white";
-    context.fillRect(originx,originy,800/scale,600/scale);
-    context.fillStyle = "black";
-    context.fillRect(50,50,100,100);
-}
-setInterval(draw,100);
-
-canvas.onmousewheel = function (event){
-    var mousex = event.clientX - canvas.offsetLeft;
-    var mousey = event.clientY - canvas.offsetTop;
-    var wheel = event.wheelDelta/120;//n or -n
-
-    var zoom = 1 + wheel/2;
-
-    context.translate(
-        originx,
-        originy
-    );
-    context.scale(zoom,zoom);
-    context.translate(
-        -( mousex / scale + originx - mousex / ( scale * zoom ) ),
-        -( mousey / scale + originy - mousey / ( scale * zoom ) )
-    );
-
-    originx = ( mousex / scale + originx - mousex / ( scale * zoom ) );
-    originy = ( mousey / scale + originy - mousey / ( scale * zoom ) );
-    scale *= zoom;
-}
-
+var startX; 
+var startY; 
+var endX; 
+var endY; 
+var radius; 
+var canvas = document.getElementById("canvas"); 
+var context = canvas.getContext("2d"); 
+var select = document.getElementsByTagName("select"); 
+window.onload=function() { 
+    canvas.onmousedown = function(e) { 
+    e = e || event; 
+    startX = e.clientX; 
+    startY = e.clientY; 
+    if(select[0].value == "arc") { 
+        canvas.onmousemove = moveShowArc; 
+    } else { 
+        canvas.onmousemove = moveShowRect; 
+    } 
+    } 
+    canvas.onmouseup = function() { 
+    canvas.onmousemove = ""; 
+    } 
+} 
+function moveShowRect(e) { 
+    context.clearRect(0, 0, 500, 300); 
+    endX = e.clientX - startX; 
+    endY = e.clientY - startY; 
+    context.beginPath(); 
+    context.rect(startX, startY, endX, endY); 
+    context.fillStyle = "#8ED6FF"; 
+    context.fill(); 
+    context.lineWidth = 3; 
+    context.strokeStyle = "black"; 
+    context.stroke(); 
+} 
+function moveShowArc(e) { 
+    context.clearRect(0, 0, 500, 300); 
+    endX = e.clientX - startX; 
+    endY = e.clientY - startY; 
+    radius = Math.sqrt(Math.pow(endX,2)+Math.pow(endY,2)); 
+    context.beginPath(); 
+    context.arc(startX, startY,radius,0,2 * Math.PI,false); 
+    context.fillStyle = "#8ED6FF"; 
+    context.fill(); 
+    context.lineWidth = 3; 
+    context.strokeStyle = "black"; 
+    context.stroke(); 
+} 
 </script>
 </html>

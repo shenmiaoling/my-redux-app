@@ -6,41 +6,45 @@
 </head>
 <body>
   <div id="main">
-    <canvas id="canvas" width="600" height="300" style="border: 1px solid "></canvas>
+    <canvas id="canvas" width="600" height="600" style="border: 1px solid " onmousewheel="window.alert('wheel!')" ></canvas>
   </div>
 </body>
-<script>
-	var canvas = document.getElementById('canvas')
-	var ctx = canvas.getContext('2d')
-	line1 = {x:175,y:75}
-	function menu() {
+<script type="text/javascript">
+var canvas = document.getElementById("canvas");
+var context = canvas.getContext("2d");
+var scale = 1;
+var originx = 0;
+var originy = 0;
 
-		ctx.lineWidth=5
-		ctx.lineCap='round'
-		ctx.beginPath()
-		ctx.moveTo(150, 75)
-		ctx.lineTo(line1.x,line1.y)
-		ctx.moveTo(150,85)
-		ctx.lineTo(175,85)
-		ctx.moveTo(150,95)
-		ctx.lineTo(175,95)
-		ctx.stroke()
-		window.requestAnimationFrame(menu)
-	}
-	function click(){
-		ctx.clearRect(140,80,45,10)
-		// line1={x:175,y:95}
-		window.requestAnimationFrame(click)
-	}
-	function line (){
+function draw(){
+    context.fillStyle = "white";
+    context.fillRect(originx,originy,800/scale,600/scale);
+    context.fillStyle = "black";
+    context.fillRect(50,50,100,100);
+}
+setInterval(draw,100);
 
-	}
-menu()
+canvas.onmousewheel = function (event){
+    var mousex = event.clientX - canvas.offsetLeft;
+    var mousey = event.clientY - canvas.offsetTop;
+    var wheel = event.wheelDelta/120;//n or -n
 
-	canvas.addEventListener('click',function(){
-		click()
-		line1={x:175,y:95}
-	})
-window.requestAnimationFrame(menu)
+    var zoom = 1 + wheel/2;
+
+    context.translate(
+        originx,
+        originy
+    );
+    context.scale(zoom,zoom);
+    context.translate(
+        -( mousex / scale + originx - mousex / ( scale * zoom ) ),
+        -( mousey / scale + originy - mousey / ( scale * zoom ) )
+    );
+
+    originx = ( mousex / scale + originx - mousex / ( scale * zoom ) );
+    originy = ( mousey / scale + originy - mousey / ( scale * zoom ) );
+    scale *= zoom;
+}
+
 </script>
 </html>
