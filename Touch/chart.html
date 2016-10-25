@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="utf-8" name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+        <title>移动端触摸滑动</title>
+        <meta name="author" content="rainna" />
+        <meta name="keywords" content="rainna's js lib" />
+        <meta name="description" content="移动端触摸滑动" />
+        <style>
+            * {margin: 0;padding: 0;}
+            li {list-style: none;}
+            .m-slider {width: 100%;margin: 50px auto;overflow: hidden;background: #ccc;position: relative;border: 1px solid red;height: 80px;}
+            .m-slider ul {position: absolute;top: 0;left: 0;height: 30px;}
+            .m-slider li {float: left;width: 100px;height: 80px;line-height: 80px;overflow: hidden;text-align: center;}
+        </style>
+    </head>
+
+    <body>
+        <div class="m-slider">
+            <ul class="cnt" id="slider"><li>中国</li><li>英国</li><li>美国</li><li>法国</li><li>德国</li><li>意大利</li><li>奥地利</li><li>新西兰</li><li>泰国</li><li>新加坡</li><li>韩国</li><li>日本</li><li>瑞典</li><li>冰岛</li><li>丹麦</li><li>俄罗斯</li></ul>
+        </div>
+    </body>
+    <script>
+window.onload = function() {
+            var startPos = null,
+                endPos = null,
+                slider = document.getElementById('slider');
+            slider.style.width = slider.getElementsByTagName("li").length * parseInt(getStyle(slider.getElementsByTagName("li")[0], "width")) + "px";
+            if (!!('ontouchstart' in window) || window.DocumentTouch && document instanceof DocumentTouch) {
+                addEvent(self.slider, "touchstart", fnstart);
+                addEvent(self.slider, "touchmove", fnmove);
+                addEvent(self.slider, "touchend", fnend);
+            }
+
+            function fnstart(ev) {
+                var touch = ev || event.targetTouches[0]; //touches数组对象获得屏幕上所有的touch，取第一个touch
+                startPos =touch.pageX;
+            }
+
+            function fnmove(ev) {
+                if (event.targetTouches.length > 1 || event.scale && event.scale !== 1) return;
+                var touch = event.targetTouches[0];
+                var slider=document.getElementById('slider');
+                endPos =touch.pageX - startPos;
+                event.preventDefault();
+                var _trans=getTransform(slider);
+                console.log(endPos+"+++++++"+Number(_trans));
+                slider.style.transform = "translateX(" + (endPos+Number(_trans)) + "px)";
+            }
+
+            function fnend() {
+                if (Math.abs(endPos) > 60) {
+                    var slider=document.getElementById('slider');
+                    var _trans=getTransform(slider);
+                    console.log(endPos+"+++++++"+Number(_trans));
+                    var juli=(Math.ceil(endPos/100)*100+Number(_trans));
+                    if(juli<0){
+                        juli=juli>screen.width-1600?juli:screen.width-1600;
+                    }else{
+                        juli=0;
+                    }
+                    slider.style.transform = "translateX("+ juli + "px)";
+                }
+            }
+
+            function getTransform(_dom){
+                var dom=_dom;
+                var transform=dom.style.transform;
+
+                if(transform!=""){
+                    return transform.split("(")[1].split("px")[0];
+                }
+                else{
+                    return 0;
+                }
+            }
+
+            function getStyle(obj, attr) {
+                if (obj.currentStyle) {
+                    return obj.currentStyle[attr];
+                } else {
+                    return getComputedStyle(obj, false)[attr];
+                }
+            }
+
+            function addEvent(obj, event, fn) {
+                obj['bind' + event] = obj['bind' + event] || [];
+                obj['bind' + event]['bind' + fn] = obj['bind' + event]['bind' + fn] || function() {
+                    fn.call(obj);
+                }
+                if (typeof document.addEventListener != "undefined") {
+                    obj.addEventListener(event, obj['bind' + event]['bind' + fn], true);
+                } else {
+                    obj.attachEvent('on' + event, obj['bind' + event]['bind' + fn]);
+                }
+            };
+        }
+    </script>
+</html>
