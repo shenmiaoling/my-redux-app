@@ -4,43 +4,60 @@
   <title>setup</title>
   <meta charset="utf-8">
 </head>
-<body onload="init()">
+<body>
   <div id="main">
-    <canvas id="canvas" width="800" height="600" style="border:1px solid"></canvas>
+    <canvas id="canvas" width="300" height="150" style="border:1px solid"></canvas>
   </div>
 </body>
     <script type='text/javascript'>
-    var convas
-    var ctx;
-    var lastPt= new Object()
-    var colours = ['red', 'green', 'blue', 'yellow', 'black']
-    function init(){
-      var touchzone = document.getElementById('canvas')
-      touchzone.addEventListener('touchmove', draw, false)
-      touchzone.addEventListener('touchend', end, false)
-      ctx = touchzone.getContext('2d')
+    var canvas = document.getElementById('canvas')
+    var ctx = canvas.getContext('2d')
+    function drawmenu(){
+      ctx.lineWidth = 4
+      ctx.lineCap = 'round'
+      ctx.strokeStyle='#066977'
+      ctx.moveTo(150,75)
+      ctx.lineTo(170,75)
+      ctx.moveTo(150,82)
+      ctx.lineTo(170,82)
+      ctx.moveTo(150,89)
+      ctx.lineTo(170,89)
+      ctx.stroke()
     }
-    function draw(e) {
-      e.preventDefault()
-      for(var i=0; i<e.touches.length;i++) {
-        ctx.lineWidth = 14
-        var id = e.touches[i].identifier
-        if(lastPt[id]) {
-          ctx.beginPath()
-          ctx.moveTo(lastPt[id].x, lastPt[id].y)
-          ctx.lineTo(e.touches[i].pageX, e.touches[i].pageY)
-          ctx.strokeStyle = colours[id]
-          ctx.stroke()
-        }
-        lastPt[id] = {x: e.touches[i].pageX, y:e.touches[i].pageY}
+    function clear() {
+      ctx.clearRect(0,0,canvas.width,canvas.height)
+    }
+    function change() {
+      ctx.moveTo(150,75)
+      ctx.lineTo(170,89)
+      ctx.moveTo(150,89)
+      ctx.lineTo(170,75)
+      ctx.stroke()
+    }
+    function handleContextmenu(e){
+
+      // get mouse position relative to the canvas
+      var x=parseInt(e.clientX-offsetX);
+      var y=parseInt(e.clientY-offsetY);
+
+
+      // check each rect for hits
+      for(var i=0;i<rects.length;i++){
+          var rect=rects[i];
+          var rectRight=rect.x+rect.width;
+          var rectBottom=rect.y+rect.height;
+
+          // if this rect is hit, display an alert
+          if(x>=rect.x && x<=rectRight && y>=rect.y && y<=rectBottom  ){
+              alert("Context menu request on the "+rect.color+" rectangle.");
+          }
       }
-    }
-    function end(e) {
+
+      // prevents the usual context from popping up
       e.preventDefault()
-      for(var i=0;i<e.changedTouches.length;i++) {
-        var id = e.changedTouches[i].identifier
-        delete lastPt[id]
-      }
+      return(false);
     }
+    drawmenu()
+    canvas.addEventListener('click',handleContextmenu, false)
     </script>
 </html>

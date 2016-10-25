@@ -15,53 +15,54 @@
   </div>
 </body>
 <script type="text/javascript">
-var startX; 
-var startY; 
-var endX; 
-var endY; 
-var radius; 
-var canvas = document.getElementById("canvas"); 
-var context = canvas.getContext("2d"); 
-var select = document.getElementsByTagName("select"); 
-window.onload=function() { 
-    canvas.onmousedown = function(e) { 
-    e = e || event; 
-    startX = e.clientX; 
-    startY = e.clientY; 
-    if(select[0].value == "arc") { 
-        canvas.onmousemove = moveShowArc; 
-    } else { 
-        canvas.onmousemove = moveShowRect; 
-    } 
-    } 
-    canvas.onmouseup = function() { 
-    canvas.onmousemove = ""; 
-    } 
-} 
-function moveShowRect(e) { 
-    context.clearRect(0, 0, 500, 300); 
-    endX = e.clientX - startX; 
-    endY = e.clientY - startY; 
-    context.beginPath(); 
-    context.rect(startX, startY, endX, endY); 
-    context.fillStyle = "#8ED6FF"; 
-    context.fill(); 
-    context.lineWidth = 3; 
-    context.strokeStyle = "black"; 
-    context.stroke(); 
-} 
-function moveShowArc(e) { 
-    context.clearRect(0, 0, 500, 300); 
-    endX = e.clientX - startX; 
-    endY = e.clientY - startY; 
-    radius = Math.sqrt(Math.pow(endX,2)+Math.pow(endY,2)); 
-    context.beginPath(); 
-    context.arc(startX, startY,radius,0,2 * Math.PI,false); 
-    context.fillStyle = "#8ED6FF"; 
-    context.fill(); 
-    context.lineWidth = 3; 
-    context.strokeStyle = "black"; 
-    context.stroke(); 
-} 
+var startX;
+var startY;
+var endX;
+var endY;
+var radius;
+var canvas = document.getElementById("canvas");
+var context = canvas.getContext("2d");
+var select = document.getElementsByTagName("select");
+window.onload=function() {
+    canvas.onmousedown = function(e) {
+    e = e || event;
+    startX = e.clientX;
+    startY = e.clientY;
+    if(select[0].value == "arc") {
+        canvas.onmousemove = moveShowArc;
+    } else {
+        canvas.onmousemove = moveShowRect;
+    }
+    }
+    canvas.onmouseup = function() {
+    canvas.onmousemove = "";
+    }
+}
+function moveShowRect(e) {
+    context.clearRect(0, 0, 500, 300);
+    endX = e.clientX - startX;
+    endY = e.clientY - startY;
+    context.beginPath();
+    context.rect(startX, startY, endX, endY);
+    context.fillStyle = "#8ED6FF";
+    context.fill();
+    context.lineWidth = 3;
+    context.strokeStyle = "black";
+    context.stroke();
+}
+function moveShowArc(e) {
+    context.clearRect(0, 0, 500, 300);
+    endX = e.clientX - startX;
+    endY = e.clientY - startY;
+    radius = Math.sqrt(Math.pow(endX,2)+Math.pow(endY,2));
+    context.beginPath();
+    context.arc(startX, startY,radius,0,2 * Math.PI,false);
+    context.fillStyle = "#8ED6FF";
+    context.fill();
+    context.lineWidth = 3;
+    context.strokeStyle = "black";
+    context.stroke();
+}
+
 </script>
 </html>
