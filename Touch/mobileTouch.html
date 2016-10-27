@@ -51,10 +51,9 @@ var rect = {x:0, y:canvas.height/2, size:canvas.width/10, color:"#043b2e"}
 
 }
 //拖动方块
-var dragRect = function (event) {
-  var touch = event.targetTouches[0]
-  rect.x = touch.pageX-25
-  rect.y = touch.pageY-25
+var dragRect = function (locX, locY) {
+  rect.x = locX-85
+  rect.y = locY-85
 }
 
 // function rotateRect() {
@@ -213,12 +212,22 @@ var dragRect = function (event) {
 
 
 // Set up an event listener for when the touch instrument is moved.
-canvas.addEventListener('touchmove', function(e) {
+function windowToCanvas(canvas, x, y) {
+    var bbox = canvas.getBoundingClientRect();
+    return { x: x - bbox.left * (canvas.width  / bbox.width),
+            y: y - bbox.top  * (canvas.height / bbox.height)
+            };
+}
+canvas.addEventListener('touchmove', (e)=>{
   e.preventDefault();
-  dragRect(e);
-},false);
-
-
+    var loc = windowToCanvas(canvas,e.changedTouches[0].pageX, e.changedTouches[0].pageY)
+  dragRect(loc.x, loc.y);
+});
+canvas.onmousemove = function (event) {
+  event.preventDefault();
+  var loc = windowToCanvas(canvas,event.clientX, event.clientY)
+  dragRect(loc.x, loc.y);
+}
 // Set up an event listener to catch cancelled touches.
 // canvas.addEventListener('touchcancel', function(e) {
 //   touchCancelled(e);
