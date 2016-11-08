@@ -4,8 +4,10 @@
   <title>setup</title>
   <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
 </head>
 <body>
+<div style="height: 100px;width: 100%;background-color: pink"></div>
   <div id="main">
     <canvas id="canvas" style="border:1px solid"></canvas>
   </div>
@@ -14,8 +16,8 @@
 var canvas = document.getElementById('canvas');
 
 // Set the canvas to fill the screen.
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+// canvas.width = window.innerWidth;
+// canvas.height = window.innerHeight;
 
 // Get a 2d drawing context.
 var ctx = canvas.getContext('2d');
@@ -220,13 +222,14 @@ function windowToCanvas(canvas, x, y) {
 }
 canvas.addEventListener('touchmove', (e)=>{
   e.preventDefault();
-    var loc = windowToCanvas(canvas,e.changedTouches[0].pageX, e.changedTouches[0].pageY)
-  dragRect(loc.x, loc.y);
+    var loc = windowToCanvas(canvas,e.touches[0].pageX, e.touches[0].pageY)
+  dragRect(e.touches[0].pageX, e.touches[0].pageY);
+  console.log('locX:'+loc.x+'e.pageX:'+e.touches[0].pageX)
 });
 canvas.onmousemove = function (event) {
   event.preventDefault();
-  var loc = windowToCanvas(canvas,event.clientX, event.clientY)
-  dragRect(loc.x, loc.y);
+  // var loc = windowToCanvas(canvas,event.clientX, event.clientY)
+  dragRect(event.clientX, event.clientY);
 }
 // Set up an event listener to catch cancelled touches.
 // canvas.addEventListener('touchcancel', function(e) {

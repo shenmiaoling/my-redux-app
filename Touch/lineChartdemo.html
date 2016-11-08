@@ -2,62 +2,85 @@
 <html>
 <head>
   <title>myCanvas</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 </head>
+<script src="http://d3js.org/d3.v3.min.js"></script>
 <style>
-canvas {
-    border: 3px #CCC solid;
+.chart div {
+  font: 10px sans-serif;
+  background-color: steelblue;
+  text-align: right;
+  padding: 3px;
+  margin: 1px;
+  color: white;
 }
 </style>
 <body>
-<canvas id="canvas" width="650" height="650"></canvas>
+<div id="vis"></div>
 </body>
 <script type="text/javascript">
-var canvas,
-context,
-Val_max,
-Val_min,
-sections,
-xScale,
-yScale,
-Apple =  [100, 102, 87, , 100, 123, 100, 90, 87, 91, 93, 88],
-Samsung = [30, 50, 70, 80, 90, 100, 95, 91, 85, 92, 99, 130],
-Nokia =   [20, -10, -20, -25, -40, 5, 10, 28, 30, 43, 65, 80];
-init()
-function init() {
-  sections = 12
-  Val_max = 130
-  Val_min = -40
-  var stepSize = 10
-  var columnSize = 50
-  var rowSize = 50
-  var margin = 10
-  var xAxis = [" ", "Jan", "Feb", "Mar", "Apr",
-  "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-  canvas = document.getElementById('canvas')
-  context = canvas.getContext('2d')
-  context.fillStyle = '#0099ff'
-  context.font = '20 pt Verdana'
-  yScale = (canvas.height - columnSize - margin) / (Val_max - Val_min)
-  xScale = (canvas.width - rowSize) / sections
-  context.strokeStyle = '#009933'
-  context.beginPath()
-  for (i=1;i<=sections;i++) {
-    var x = i * xScale;
-    context.fillText(xAxis[i], x,columnSize - margin);
-    context.moveTo(x, columnSize);
-    context.lineTo(x, canvas.height - margin);
-  }
-  var count =  0;
-  for (scale=Val_max;scale>=Val_min;scale = scale - stepSize) {
-    var y = columnSize + (yScale * count * stepSize);
-    context.fillText(scale, margin,y + margin);
-    context.moveTo(rowSize,y)
-    context.lineTo(canvas.width,y)
-    count++;
-  }
-  context.stroke();
-  context.translate(rowSize,canvas.height + Val_min * yScale);
-  context.scale(1,-1 * yScale);
-}
+d3.ns.prefix.custom = "https://d3js.org/namespace/custom";
+
+var width = window.innerWidth,
+    height = window.innerHeight;
+
+// Add our "custom" sketch element to the body.
+var sketch = d3.select("body").append("custom:sketch")
+    .attr("width", width)
+    .attr("height", height)
+    .call(custom);
+
+// On each mouse move, create a circle that increases in size and fades away.
+d3.select(window).on("touchmove", function() {
+  sketch.append("custom:circle")
+      .attr("x", d3.event.touches[0].clientX)
+      .attr("y", d3.event.touches[0].clientY)
+      .attr("radius", 0)
+      .attr("strokeStyle", "red")
+    .transition()
+      .duration(2000)
+      .ease(Math.sqrt)
+      .attr("radius", 200)
+      .attr("strokeStyle", "white")
+      .remove();
+});
+
+function custom(selection) {
+  selection.each(function() {
+    var root = this,
+        canvas = root.parentNode.appendChild(document.createElement("canvas")),
+        context = canvas.getContext("2d");
+
+    canvas.style.position = "absolute";
+    canvas.style.top = root.offsetTop + "px";
+    canvas.style.left = root.offsetLeft + "px";
+
+    // It'd be nice to use DOM Mutation Events here instead.
+    // However, they appear to arrive irregularly, causing choppy animation.
+    d3.timer(redraw);
+
+    // Clear the canvas and then iterate over child elements.
+    function redraw() {
+      canvas.width = root.getAttribute("width");
+      canvas.height = root.getAttribute("height");
+      for (var child = root.firstChild; child; child = child.nextSibling) draw(child);
+    }
+
+    // For now we only support circles with strokeStyle.
+    // But you should imagine extending this to arbitrary shapes and groups!
+    function draw(element) {
+      switch (element.tagName) {
+        case "circle": {
+          context.strokeStyle = element.getAttribute("strokeStyle");
+          context.beginPath();
+          context.lineWidth = 2
+          context.arc(element.getAttribute("x"), element.getAttribute("y"), element.getAttribute("radius"), 0, 2 * Math.PI);
+          context.stroke();
+          break;
+        }
+      }
+    }
+  });
+};
 </script>
 </html>

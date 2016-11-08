@@ -10,7 +10,7 @@ var subscripts = [0, 1, 2, 3, 4, 5, 6]
 var lines = []
 var display = false
 var angle = 0
-var alpha = 0
+
 function drwaCoordinate() {
 
   //坐标系名称
